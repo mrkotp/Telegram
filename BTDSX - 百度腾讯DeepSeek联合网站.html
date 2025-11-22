@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTDSX - 百度腾讯DeepSeek联合网站</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --baidu-blue: #2934dc;
+            --tencent-red: #ff6b6b;
+            --deepseek-purple: #6c5ce7;
+            --primary-gradient: linear-gradient(135deg, var(--baidu-blue), var(--tencent-red), var(--deepseek-purple));
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0.9;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: white;
+        }
+        
+        .baidu-logo { background: var(--baidu-blue); }
+        .tencent-logo { background: var(--tencent-red); }
+        .deepseek-logo { background: var(--deepseek-purple); }
+        
+        .animated-section {
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .counter {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .service-item {
+            border-left: 4px solid var(--baidu-blue);
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .stats-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .btn-gradient {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .footer {
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 40px 0;
+            margin-top: 80px;
+        }
+        
+        .page-indicator {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        
+        .page-btn {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            margin: 5px 0;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .page-btn:hover {
+            background: white;
+            color: var(--baidu-blue);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .active-section {
+            display: block !important;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" onclick="showSection('home')">
+                <i class="fas fa-cubes me-2"></i>BTDSX
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('home')">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('about')">关于我们</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('services')">服务</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('technology')">技术</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('contact')">联系</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面指示器 -->
+    <div class="page-indicator">
+        <a href="#" class="page-btn" onclick="showSection('home')" data-page="home">1</a>
+        <a href="#" class="page-btn" onclick="showSection('about')" data-page="about">2</a>
+        <a href="#" class="page-btn" onclick="showSection('services')" data-page="services">3</a>
+        <a href="#" class="page-btn" onclick="showSection('technology')" data-page="technology">4</a>
+        <a href="#" class="page-btn" onclick="showSection('contact')" data-page="contact">5</a>
+    </div>
+
+    <!-- 首页 -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content animated-section">
+            <h1 class="display-3 fw-bold mb-4 floating">BTDSX 联合平台</h1>
+            <p class="lead mb-4">百度 • 腾讯 • DeepSeek 强强联合，共创AI未来</p>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-gradient btn-lg" onclick="showSection('about')">
+                    <i class="fas fa-arrow-right me-2"></i>了解我们
+                </button>
+                <button class="btn btn-outline-light btn-lg" onclick="showSection('services')">
+                    <i class="fas fa-cogs me-2"></i>查看服务
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about" class="py-5 hidden">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">关于我们</h2>
+                <p class="text-muted">三大巨头联合，打造最强大的AI生态系统</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="company-logo baidu-logo">
+                            <i class="fab fa-baidu"></i>
+                        </div>
+                        <h4>百度技术</h4>
+                        <p>深度学习与自然语言处理领域的领导者，提供强大的AI基础能力</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="company-logo tencent-logo">
+                            <i class="fab fa-tencent-weibo"></i>
+                        </div>
+                        <h4>腾讯生态</h4>
+                        <p>丰富的应用场景和庞大的用户基础，AI技术的完美落地平台</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center">
+                        <div class="company-logo deepseek-logo">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>DeepSeek创新</h4>
+                        <p>前沿的AI研究与开发，推动人工智能技术的边界拓展</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-lg-6">
+                    <div class="counter text-center p-4">
+                        <div class="stats-number" id="counter1">0</div>
+                        <h5>用户数量</h5>
+                        <p class="text-muted">活跃用户总数</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="counter text-center p-4">
+                        <div class="stats-number" id="counter2">0</div>
+                        <h5>服务调用</h5>
+                        <p class="text-muted">每日API调用次数</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务 -->
+    <section id="services" class="py-5 hidden">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">我们的服务</h2>
+                <p class="text-muted">整合三大平台优势，提供全方位AI解决方案</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-language text-primary me-2"></i>智能翻译</h4>
+                        <div class="service-item">
+                            <h5>百度翻译引擎</h5>
+                            <p>支持200+语言的高质量翻译服务</p>
+                        </div>
+                        <div class="service-item">
+                            <h5>实时语音翻译</h5>
+                            <p>即时语音转文字翻译功能</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-image text-success me-2"></i>图像识别</h4>
+                        <div class="service-item">
+                            <h5>腾讯优图技术</h5>
+                            <p>高精度图像识别与分析</p>
+                        </div>
+                        <div class="service-item">
+                            <h5>人脸识别</h5>
+                            <p>安全可靠的身份验证系统</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-brain text-warning me-2"></i>AI助手</h4>
+                        <div class="service-item">
+                            <h5>DeepSeek大模型</h5>
+                            <p>先进的对话式AI助手</p>
+                        </div>
+                        <div class="service-item">
+                            <h5>智能客服</h5>
+                            <p>7×24小时在线客服支持</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术 -->
+    <section id="technology" class="py-5 hidden">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">核心技术</h2>
+                <p class="text-muted">三大平台技术融合，创造无限可能</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="feature-card">
+                        <h4>深度学习平台</h4>
+                        <p>整合百度PaddlePaddle、腾讯云AI平台和DeepSeek自研模型，提供强大的机器学习能力。</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-primary" style="width: 95%">百度</div>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-danger" style="width: 90%">腾讯</div>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-purple" style="width: 88%">DeepSeek</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-card">
+                        <h4>云计算基础设施</h4>
+                        <p>基于腾讯云和百度云的弹性计算资源，确保服务的高可用性和扩展性。</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check-circle text-success me-2"></i> 弹性计算</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i> 分布式存储</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i> CDN加速</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i> 安全防护</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="py-5 hidden">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">联系我们</h2>
+                <p class="text-muted">有任何问题或合作意向，请随时联系我们</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-envelope me-2"></i> 联系信息</h4>
+                        <div class="contact-info">
+                            <p><i class="fas fa-map-marker-alt me-2 text-primary"></i> 北京市海淀区中关村</p>
+                            <p><i class="fas fa-phone me-2 text-success"></i> +86 10-12345678</p>
+                            <p><i class="fas fa-envelope me-2 text-warning"></i> info@btdsx.com</p>
+                            <p><i class="fas fa-clock me-2 text-info"></i> 周一至周五 9:00-18:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-comment me-2"></i> 在线留言</h4>
+                        <form>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="您的姓名">
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="您的邮箱">
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="4" placeholder="留言内容"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-gradient w-100">发送留言</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>BTDSX</h5>
+                    <p>百度 • 腾讯 • DeepSeek 联合打造的AI平台</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>快速链接</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('home')">首页</a></li>
+                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('about')">关于我们</a></li>
+                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('services')">服务</a></li>
+                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('technology')">技术</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>关注我们</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="fab fa-weibo fa-2x"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-weixin fa-2x"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-twitter fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 BTDSX. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 页面切换功能
+        function showSection(sectionId) {
+            // 隐藏所有section
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // 显示目标section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                // 如果是首页，显示hero-section
+                if (sectionId === 'home') {
+                    targetSection.classList.add('hero-section');
+                    document.querySelector('.hero-overlay').style.display = 'block';
+                } else {
+                    targetSection.classList.remove('hero-section');
+                    document.querySelector('.hero-overlay').style.display = 'none';
+                }
+            }
+            
+            // 平滑滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 数字计数器动画
+        function animateCounter(elementId, target, duration = 2000) {
+            const element = document.getElementById(elementId);
+            let current = 0;
+            const increment = target / (duration / 16);
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化显示首页
+            showSection('home');
+            
+            // 数字动画
+            setTimeout(() => {
+                animateCounter('counter1', 100000000); // 1亿用户
+                animateCounter('counter2', 1000000000); // 10亿调用
+            }, 1000);
+            
+            // 滚动动画
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.feature-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+
+        // 监听页面滚动，添加导航栏效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98) !important';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95) !important';
+            }
+        });
+    </script>
+</body>
+</html>
